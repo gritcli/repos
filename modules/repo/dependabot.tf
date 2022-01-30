@@ -12,6 +12,7 @@ resource "github_repository_file" "dependabot_config" {
   content = templatefile(
     "${path.module}/templates/dependabot.yml.tftpl",
     {
+      org = module.github.org
       ecosystems = compact([
         "github-actions",
         contains(var.languages, "go") ? "gomod" : "",
@@ -34,6 +35,8 @@ resource "github_repository_file" "dependabot_workflow_config" {
 
   content = templatefile(
     "${path.module}/templates/workflow-dependabot.yml.tftpl",
-    {}
+    {
+      org = module.github.org
+    }
   )
 }
