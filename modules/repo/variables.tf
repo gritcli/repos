@@ -31,11 +31,12 @@ variable "languages" {
 }
 
 variable "workflow" {
-  description = "Override the GitHub Actions workflow, otherwise it is determined based on the specified language"
+  description = "Override the GitHub Actions CI workflow, otherwise it is determined based on the specified language"
   type        = string
   default     = "(default)" # sentinel used to detect absence of attribute
   nullable    = true
 }
+
 
 variable "copyright" {
   description = "Information about the copyright notice to include in the LICENSE file"
@@ -55,12 +56,11 @@ variable "publish_releases" {
 locals {
   primary_language = length(var.languages) == 0 ? null : var.languages[0]
   workflow         = var.workflow == "(default)" ? local.primary_language : var.workflow
+  publish_releases = coalesce(var.publish_releases, local.workflow != null) # by default, publish if there is a CI workflow
 
   enable_branch_protection     = local.workflow != null && !var.private # not supported by private repos on free-tier
   enable_dependabot            = local.primary_language != null
   enable_dependabot_auto_merge = local.enable_dependabot && github_repository.this.allow_auto_merge
 
   copyright = defaults(var.copyright, {})
-
-  publish_releases = var.publish_releases == null ? local.workflow != null : var.publish_releases # by default, publish if there are other workflows
 }

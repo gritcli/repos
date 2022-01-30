@@ -1,0 +1,36 @@
+on:
+  workflow_call:
+
+jobs:
+  go:
+    name: Go + GitHub Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ^1
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Read deploy key for SSH agent
+        id: privatekey
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./builtins/gitvcs/testdata/deploy-key-no-passphrase
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ steps.privatekey.outputs.content }}
+
+      - name: Make
+        run: make ci
+        env:
+          GRIT_INTEGRATION_TEST_GITHUB_TOKEN: ${{ secrets.GRIT_INTEGRATION_TEST_GITHUB_TOKEN }}
+          GRIT_INTEGRATION_TEST_USE_GITHUB_API: "true"
+
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v2
