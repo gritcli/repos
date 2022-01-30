@@ -15,3 +15,9 @@ jobs:
   ci:
     name: Shared
     uses: ${org}/repos/.github/workflows/shared-${workflow}.yml@main
+    %{~ if length(secrets) > 0 }
+    secrets:
+    %{~ for key in secrets ~}
+      ${key}: $${{ secrets.${key} }}
+    %{~ endfor ~}
+    %{~ endif ~}

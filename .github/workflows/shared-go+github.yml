@@ -1,5 +1,8 @@
-on:
+"on":
   workflow_call:
+    secrets:
+      GRIT_INTEGRATION_TEST_GITHUB_TOKEN:
+        required: true
 
 jobs:
   go:
