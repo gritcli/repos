@@ -9,3 +9,14 @@ module "repo_grit" {
     since = 2017
   }
 }
+
+module "repo_interact" {
+  source      = "./modules/repo"
+  name        = "interact"
+  description = "Interactive terminal utilities for asynchronous Go CLIs."
+  languages   = ["go"]
+
+  copyright = {
+    since = 2022
+  }
+}
