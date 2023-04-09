@@ -23,7 +23,7 @@ jobs:
         id: privatekey
         uses: juliangruber/read-file-action@v1
         with:
-          path: ./builtins/gitvcs/testdata/deploy-key-no-passphrase
+          path: ./testdata/keys/deploy-key-no-passphrase
 
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.8.0
