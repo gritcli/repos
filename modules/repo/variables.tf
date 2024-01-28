@@ -42,7 +42,7 @@ variable "copyright" {
   description = "Information about the copyright notice to include in the LICENSE file"
   type = object({
     since   = string,
-    holders = optional(list(string))
+    holders = optional(list(string), [])
   })
   nullable = false
 }
@@ -61,6 +61,4 @@ locals {
   enable_branch_protection     = local.workflow != null && !var.private # not supported by private repos on free-tier
   enable_dependabot            = local.primary_language != null
   enable_dependabot_auto_merge = local.enable_dependabot && github_repository.this.allow_auto_merge
-
-  copyright = defaults(var.copyright, {})
 }
